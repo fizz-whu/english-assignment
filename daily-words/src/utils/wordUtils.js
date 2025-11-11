@@ -1,6 +1,6 @@
 import wordGroups from '../data/wordGroups.json';
 
-const START_DATE = new Date('2025-11-11'); // Starting from today
+const START_DATE = '2025-11-11'; // Starting from today
 
 /**
  * Get the day index since the start date
@@ -8,9 +8,11 @@ const START_DATE = new Date('2025-11-11'); // Starting from today
 export function getDayIndex() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  START_DATE.setHours(0, 0, 0, 0);
 
-  const diffTime = Math.abs(today - START_DATE);
+  const startDate = new Date(START_DATE);
+  startDate.setHours(0, 0, 0, 0);
+
+  const diffTime = Math.abs(today - startDate);
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
   return diffDays % 350; // Cycle through 350 days

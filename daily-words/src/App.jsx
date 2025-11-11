@@ -12,21 +12,26 @@ function App() {
   const [currentDate, setCurrentDate] = useState('');
 
   useEffect(() => {
-    // Get today's words
-    const words = getDailyWords();
-    setDailyWords(words);
+    try {
+      // Get today's words
+      const words = getDailyWords();
+      console.log('Daily words loaded:', words.length, 'words');
+      setDailyWords(words);
 
-    // Get learned words from localStorage
-    const learned = getLearnedWords();
-    setLearnedWords(learned);
+      // Get learned words from localStorage
+      const learned = getLearnedWords();
+      setLearnedWords(learned);
 
-    // Set current date
-    const date = new Date().toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-    setCurrentDate(date);
+      // Set current date
+      const date = new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      setCurrentDate(date);
+    } catch (error) {
+      console.error('Error initializing app:', error);
+    }
   }, []);
 
   const handleWordClick = (word) => {

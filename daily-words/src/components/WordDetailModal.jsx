@@ -80,15 +80,7 @@ function WordDetailModal({ word, isLearned, onClose, onMarkAsLearned }) {
       >
         {/* Modal Header */}
         <div className="flex items-center justify-between rounded-t-xl border-b border-custom-border-light bg-custom-blue-dark p-4 text-white dark:border-custom-border-dark">
-          <div className="flex items-center gap-3">
-            <h3 className="text-2xl font-bold">{capitalizedWord}</h3>
-            <button
-              onClick={playPronunciation}
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
-            >
-              <span className="material-symbols-outlined text-xl">volume_up</span>
-            </button>
-          </div>
+          <h3 className="text-2xl font-bold">{capitalizedWord}</h3>
           <button
             onClick={onClose}
             className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
@@ -104,6 +96,16 @@ function WordDetailModal({ word, isLearned, onClose, onMarkAsLearned }) {
           </div>
         ) : (
           <div className="space-y-6 p-6">
+            {/* Pronunciation Button */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={playPronunciation}
+                className="flex items-center gap-2 rounded-lg bg-custom-blue-light px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-600"
+              >
+                <span className="material-symbols-outlined text-base">volume_up</span>
+                Play Pronunciation
+              </button>
+            </div>
             <div>
               <h4 className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                 Definition

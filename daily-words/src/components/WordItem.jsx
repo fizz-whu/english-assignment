@@ -1,11 +1,20 @@
 function WordItem({ word, isLearned, onClick }) {
   const capitalizedWord = word.charAt(0).toUpperCase() + word.slice(1);
 
+  const handleClick = () => {
+    console.log('WordItem clicked:', word);
+    if (onClick) {
+      onClick();
+    } else {
+      console.error('onClick handler is missing!');
+    }
+  };
+
   if (isLearned) {
     return (
       <div
         className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg border border-transparent bg-green-50 p-4 transition-all dark:bg-custom-green/10"
-        onClick={onClick}
+        onClick={handleClick}
       >
         <div className="flex items-center gap-4">
           <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-custom-green text-white">
@@ -25,7 +34,7 @@ function WordItem({ word, isLearned, onClick }) {
   return (
     <div
       className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg border border-custom-border-light bg-white p-4 transition-all hover:border-custom-blue-light hover:shadow-sm dark:border-custom-border-dark dark:bg-gray-800 dark:hover:border-custom-blue-light"
-      onClick={onClick}
+      onClick={handleClick}
     >
       <div className="flex items-center gap-4">
         <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-700">

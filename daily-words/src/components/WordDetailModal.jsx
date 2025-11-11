@@ -8,6 +8,12 @@ function WordDetailModal({ word, isLearned, onClose, onMarkAsLearned }) {
 
   const capitalizedWord = word.charAt(0).toUpperCase() + word.slice(1);
 
+  console.log('=== WordDetailModal Render ===');
+  console.log('Word:', word);
+  console.log('Is learned:', isLearned);
+  console.log('Loading:', loading);
+  console.log('Word data:', wordData ? 'loaded' : 'null');
+
   useEffect(() => {
     const fetchWordData = async () => {
       setLoading(true);
@@ -34,10 +40,12 @@ function WordDetailModal({ word, isLearned, onClose, onMarkAsLearned }) {
   }, [word]);
 
   const playPronunciation = () => {
+    console.log('=== Modal: Play pronunciation clicked ===', word);
     // Try to play audio from dictionary API if available
     if (wordData?.phonetics) {
       const audioPhonetic = wordData.phonetics.find(p => p.audio);
       if (audioPhonetic) {
+        console.log('Playing audio from dictionary API');
         const audio = new Audio(audioPhonetic.audio);
         audio.play();
         return;
@@ -45,6 +53,7 @@ function WordDetailModal({ word, isLearned, onClose, onMarkAsLearned }) {
     }
 
     // Fallback to Web Speech API
+    console.log('Using Web Speech API');
     const utterance = new SpeechSynthesisUtterance(word);
     utterance.lang = 'en-US';
     utterance.rate = 0.8;
@@ -72,17 +81,26 @@ function WordDetailModal({ word, isLearned, onClose, onMarkAsLearned }) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-      onClick={onClose}
+      onClick={() => {
+        console.log('=== Modal: Background clicked, closing modal ===');
+        onClose();
+      }}
     >
       <div
         className="w-full max-w-lg rounded-xl bg-custom-gray-light dark:bg-gray-800"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          console.log('=== Modal: Content area clicked, preventing close ===');
+          e.stopPropagation();
+        }}
       >
         {/* Modal Header */}
         <div className="flex items-center justify-between rounded-t-xl border-b border-custom-border-light bg-custom-blue-dark p-4 text-white dark:border-custom-border-dark">
           <h3 className="text-2xl font-bold">{capitalizedWord}</h3>
           <button
-            onClick={onClose}
+            onClick={() => {
+              console.log('=== Modal: Close button clicked ===');
+              onClose();
+            }}
             className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
           >
             <span className="material-symbols-outlined text-xl">close</span>
@@ -139,7 +157,10 @@ function WordDetailModal({ word, isLearned, onClose, onMarkAsLearned }) {
         <div className="flex flex-col gap-2 border-t border-custom-border-light p-4 dark:border-custom-border-dark sm:flex-row-reverse">
           {!isLearned && (
             <button
-              onClick={onMarkAsLearned}
+              onClick={() => {
+                console.log('=== Modal: Mark as Learned button clicked ===');
+                onMarkAsLearned();
+              }}
               className="flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-custom-green px-4 text-sm font-bold text-white transition-colors hover:bg-green-700"
             >
               <span className="material-symbols-outlined text-base">check_circle</span>
@@ -147,7 +168,10 @@ function WordDetailModal({ word, isLearned, onClose, onMarkAsLearned }) {
             </button>
           )}
           <button
-            onClick={onClose}
+            onClick={() => {
+              console.log('=== Modal: Bottom Close button clicked ===');
+              onClose();
+            }}
             className="flex h-10 w-full items-center justify-center rounded-lg bg-gray-200 px-4 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
           >
             Close

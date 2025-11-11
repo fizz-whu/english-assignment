@@ -35,17 +35,22 @@ function App() {
   }, []);
 
   const handleWordClick = (word) => {
+    console.log('=== App: Word clicked ===', word);
     setSelectedWord(word);
+    console.log('=== App: Selected word state updated ===');
   };
 
   const handleCloseModal = () => {
+    console.log('=== App: Closing modal ===');
     setSelectedWord(null);
   };
 
   const handleMarkAsLearned = (word) => {
+    console.log('=== App: Marking word as learned ===', word);
     const updatedLearnedWords = markWordAsLearned(word);
     setLearnedWords(updatedLearnedWords);
     setSelectedWord(null);
+    console.log('=== App: Updated learned words ===', updatedLearnedWords);
   };
 
   const isWordLearned = (word) => {
@@ -54,6 +59,12 @@ function App() {
 
   const learnedCount = dailyWords.filter(word => isWordLearned(word)).length;
   const progress = dailyWords.length > 0 ? (learnedCount / dailyWords.length) * 100 : 0;
+
+  console.log('=== App Render ===');
+  console.log('Daily words count:', dailyWords.length);
+  console.log('Learned count:', learnedCount);
+  console.log('Selected word:', selectedWord);
+  console.log('Modal should show:', !!selectedWord);
 
   return (
     <div className="bg-custom-gray-light dark:bg-background-dark font-display text-custom-text-light dark:text-custom-text-dark">

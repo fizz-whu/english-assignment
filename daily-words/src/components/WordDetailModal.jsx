@@ -1,0 +1,159 @@
+import { useState, useEffect } from 'react';
+import { getWordDefinition } from '../utils/wordUtils';
+
+function WordDetailModal({ word, isLearned, onClose, onMarkAsLearned }) {
+  const [wordData, setWordData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [chineseTranslation, setChineseTranslation] = useState('');
+
+  const capitalizedWord = word.charAt(0).toUpperCase() + word.slice(1);
+
+  useEffect(() => {
+    const fetchWordData = async () => {
+      setLoading(true);
+      const data = await getWordDefinition(word);
+      setWordData(data);
+
+      // Fetch Chinese translation
+      try {
+        const response = await fetch(
+          `https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=en|zh-CN`
+        );
+        const translationData = await response.json();
+        if (translationData.responseData && translationData.responseData.translatedText) {
+          setChineseTranslation(translationData.responseData.translatedText);
+        }
+      } catch (error) {
+        console.error('Error fetching Chinese translation:', error);
+      }
+
+      setLoading(false);
+    };
+
+    fetchWordData();
+  }, [word]);
+
+  const playPronunciation = () => {
+    // Try to play audio from dictionary API if available
+    if (wordData?.phonetics) {
+      const audioPhonetic = wordData.phonetics.find(p => p.audio);
+      if (audioPhonetic) {
+        const audio = new Audio(audioPhonetic.audio);
+        audio.play();
+        return;
+      }
+    }
+
+    // Fallback to Web Speech API
+    const utterance = new SpeechSynthesisUtterance(word);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.8;
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const getDefinition = () => {
+    if (!wordData || !wordData.meanings || wordData.meanings.length === 0) {
+      return 'Definition not available';
+    }
+    return wordData.meanings[0].definitions[0].definition;
+  };
+
+  const getExample = () => {
+    if (!wordData || !wordData.meanings || wordData.meanings.length === 0) {
+      return 'Example not available';
+    }
+    const firstMeaning = wordData.meanings[0];
+    if (firstMeaning.definitions[0].example) {
+      return firstMeaning.definitions[0].example;
+    }
+    return 'No example available';
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-lg rounded-xl bg-custom-gray-light dark:bg-gray-800"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Modal Header */}
+        <div className="flex items-center justify-between rounded-t-xl border-b border-custom-border-light bg-custom-blue-dark p-4 text-white dark:border-custom-border-dark">
+          <div className="flex items-center gap-3">
+            <h3 className="text-2xl font-bold">{capitalizedWord}</h3>
+            <button
+              onClick={playPronunciation}
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+            >
+              <span className="material-symbols-outlined text-xl">volume_up</span>
+            </button>
+          </div>
+          <button
+            onClick={onClose}
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+          >
+            <span className="material-symbols-outlined text-xl">close</span>
+          </button>
+        </div>
+
+        {/* Modal Content */}
+        {loading ? (
+          <div className="p-6 text-center">
+            <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+          </div>
+        ) : (
+          <div className="space-y-6 p-6">
+            <div>
+              <h4 className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                Definition
+              </h4>
+              <p className="mt-1 text-base text-gray-700 dark:text-gray-300">
+                {getDefinition()}
+              </p>
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                Example
+              </h4>
+              <p className="mt-1 text-base italic text-gray-700 dark:text-gray-300">
+                "{getExample()}"
+              </p>
+            </div>
+            {chineseTranslation && (
+              <div>
+                <h4 className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                  Translation (Chinese)
+                </h4>
+                <p className="mt-1 text-base text-gray-700 dark:text-gray-300">
+                  {chineseTranslation}
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Modal Actions */}
+        <div className="flex flex-col gap-2 border-t border-custom-border-light p-4 dark:border-custom-border-dark sm:flex-row-reverse">
+          {!isLearned && (
+            <button
+              onClick={onMarkAsLearned}
+              className="flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-custom-green px-4 text-sm font-bold text-white transition-colors hover:bg-green-700"
+            >
+              <span className="material-symbols-outlined text-base">check_circle</span>
+              Mark as Learned
+            </button>
+          )}
+          <button
+            onClick={onClose}
+            className="flex h-10 w-full items-center justify-center rounded-lg bg-gray-200 px-4 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default WordDetailModal;

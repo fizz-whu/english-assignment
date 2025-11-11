@@ -1,0 +1,21 @@
+=== Daily Words Deployment Information ===
+
+S3 Bucket: daily-words-app-1762841867
+Region: us-east-1
+
+S3 Website URL (HTTP):
+http://daily-words-app-1762841867.s3-website-us-east-1.amazonaws.com
+
+CloudFront URL (HTTPS - wait 15-20 min):
+https://d1x17qlrrbxdf7.cloudfront.net
+
+CloudFront Distribution ID: EXBKPCI84WYD6
+
+=== GitHub Actions Secrets ===
+Add these to: https://github.com/fizz-whu/english-assignment/settings/secrets/actions
+
+AWS_REGION=us-east-1
+S3_BUCKET_NAME=daily-words-app-1762841867
+CLOUDFRONT_DISTRIBUTION_ID=EXBKPCI84WYD6
+AWS_ACCESS_KEY_ID=<get from AWS IAM>
+AWS_SECRET_ACCESS_KEY=<get from AWS IAM>

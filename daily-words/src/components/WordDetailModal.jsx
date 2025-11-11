@@ -81,6 +81,19 @@ function WordDetailModal({ word, isLearned, onClose, onMarkAsLearned }) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 9999,
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '1rem'
+      }}
       onClick={() => {
         console.log('=== Modal: Background clicked, closing modal ===');
         onClose();
@@ -88,6 +101,13 @@ function WordDetailModal({ word, isLearned, onClose, onMarkAsLearned }) {
     >
       <div
         className="w-full max-w-lg rounded-xl bg-custom-gray-light dark:bg-gray-800"
+        style={{
+          width: '100%',
+          maxWidth: '32rem',
+          borderRadius: '0.75rem',
+          backgroundColor: '#F8F9FA',
+          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+        }}
         onClick={(e) => {
           console.log('=== Modal: Content area clicked, preventing close ===');
           e.stopPropagation();
